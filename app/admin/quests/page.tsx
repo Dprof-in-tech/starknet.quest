@@ -72,6 +72,10 @@ export default function Page() {
     []
   );
 
+  const handleOpenAnalytics = () => {
+    window.open('/analytics', '_blank'); 
+  };
+
   return (
     <div className="flex flex-col w-full pt-28 g-8">
       <div className={styles.backButton}>
@@ -84,10 +88,13 @@ export default function Page() {
             <p className={styles.questListHeading}>Your quests</p>
             <p>{quests?.length} quests</p>
           </div>
-          <div>
+          <div className={homePagestyles.questsButtonContainer}>
             <Button onClick={handleCreateQuest}>
               <p>Create new quest</p>
             </Button>
+            <Button onClick={handleOpenAnalytics}>
+              <p>Open Analytics</p>
+              </Button>
           </div>
         </div>
         <Loading isLoading={loading} loadingType="skeleton">
