@@ -2,6 +2,7 @@ import React from "react";
 import Button from "@components/UI/button";
 import { useNotification } from "@context/NotificationProvider";
 import { AdminService } from '@services/authService';
+import DownloadButton from '../shared/DownloadButton';
 
 type DownloadBoostWinnersButtonProps = {
   boostId: string;
@@ -28,9 +29,11 @@ const DownloadBoostWinnersButton: React.FC<DownloadBoostWinnersButtonProps> = ({
   };
 
   return (
-    <Button onClick={handleDownload}>
-      <p>Download boost winners</p>
-    </Button>
+    <DownloadButton 
+      label="Download Boost Winners" 
+      endpoint="/api/boost-winners" 
+      queryParams={{ boostId: Number(boostId) }} 
+    />
   );
 };
 

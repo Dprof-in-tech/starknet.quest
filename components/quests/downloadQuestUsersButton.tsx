@@ -2,6 +2,7 @@ import React from "react";
 import Button from "@components/UI/button";
 import { useNotification } from "@context/NotificationProvider";
 import { AdminService } from "@services/authService";
+import DownloadButton from '../shared/DownloadButton';
 
 type QuestUsersButtonProps = {
   questId: string;
@@ -28,9 +29,11 @@ const DownloadQuestUsersButton: React.FC<QuestUsersButtonProps> = ({ questId }) 
   };
 
   return (
-    <Button onClick={handleDownload}>
-      <p>Download quest users</p>
-    </Button>
+    <DownloadButton 
+      label="Download Quest Users" 
+      endpoint="/api/quest-users" 
+      queryParams={{ questId: Number(questId) }} 
+    />
   );
 };
 

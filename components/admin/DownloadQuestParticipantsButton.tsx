@@ -2,6 +2,7 @@ import React from 'react';
 import Button from '@components/UI/button';
 import { useNotification } from '@context/NotificationProvider';
 import { AdminService } from '@services/authService';
+import DownloadButton from '../shared/DownloadButton';
 
 interface DownloadQuestParticipantsButtonProps {
   questId: string | number;
@@ -44,12 +45,11 @@ const DownloadQuestParticipantsButton: React.FC<DownloadQuestParticipantsButtonP
   return (
     <div className="w-full flex justify-center">
       <div className="w-full sm:w-fit">
-        <Button 
-          onClick={handleDownload}
-          disabled={isLoading}
-        >
-          <p>{isLoading ? 'Downloading...' : 'Download quest participants'}</p>
-        </Button>
+      <DownloadButton 
+      label="Download Quest Participants" 
+      endpoint="/api/quest-participants" 
+      queryParams={{ questId: 123 }} 
+    />
       </div>
     </div>
   );
