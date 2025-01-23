@@ -47,7 +47,7 @@ export default function Page() {
       console.log("Error while fetching quests", error);
     }
   }, []);
-  
+
   const handleCreateQuest = useCallback(() => {
     router.push("/admin/quests/create");
   }, []);
