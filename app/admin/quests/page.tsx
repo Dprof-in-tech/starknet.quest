@@ -40,14 +40,14 @@ export default function Page() {
     try {
       setLoading(true);
       const res = await AdminService.getQuests();
-      setQuests(res);
+      setQuests(res.reverse()); // Reverse the order to show the most recent quests first
       setLoading(false);
     } catch (error) {
       showNotification("Error while fetching quests", "error");
       console.log("Error while fetching quests", error);
     }
   }, []);
-
+  
   const handleCreateQuest = useCallback(() => {
     router.push("/admin/quests/create");
   }, []);
