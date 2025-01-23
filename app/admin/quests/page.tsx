@@ -40,7 +40,7 @@ export default function Page() {
     try {
       setLoading(true);
       const res = await AdminService.getQuests();
-      setQuests(res);
+      setQuests(res.reverse());
       setLoading(false);
     } catch (error) {
       showNotification("Error while fetching quests", "error");
