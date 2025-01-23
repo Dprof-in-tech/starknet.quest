@@ -250,7 +250,7 @@ export default function Page() {
     await handleCreateBoost(id);
     await handleCreateNftUri(id);
     await setButtonLoading(false);
-    handlePagination("Next");
+    router.push(`/admin/quests/dashboard/${id}?tab=tasks`);
   }, [questInput, boostInput, nfturi]);
 
   const handleCreateTask = useCallback(async () => {
@@ -541,7 +541,7 @@ export default function Page() {
         <AdminQuestDetails
           quest={finalQuestData}
           // eslint-disable-next-line @typescript-eslint/no-empty-function
-          setShowDomainPopup={() => {}}
+          setShowDomainPopup={() => { }}
           hasRootDomain={false}
           rewardButtonTitle={finalQuestData.disabled ? "Enable" : "Disable"}
           onRewardButtonClick={async () => {
