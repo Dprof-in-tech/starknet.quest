@@ -823,15 +823,10 @@ export default function Page({ params }: QuestIdProps) {
           // eslint-disable-next-line @typescript-eslint/no-empty-function
           setShowDomainPopup={() => {}}
           hasRootDomain={false}
-          rewardButtonTitle={questData.disabled ? "Enable" : "Disable"}
-          onRewardButtonClick={async () => {
-            await handlePublishQuest(!questData.disabled);
-            if (!questData.disabled) {
-              showNotification("Quest is disabled from launch", "success");
-            } else {
-              showNotification("Quest is enabled for launch", "success");
-            }
-            await fetchPageData();
+          rewardButtonTitle="Analytics"
+          onRewardButtonClick={() => {
+            const analyticsUrl = `/analytics/${questData.id}`;
+            window.open(analyticsUrl, "_blank");
           }}
           overrideDisabledState={false}
           isEdit={true}
