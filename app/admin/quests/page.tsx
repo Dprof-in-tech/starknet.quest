@@ -93,7 +93,7 @@ export default function Page() {
               <p>New quest</p>
             </Button>
             <Button onClick={handleOpenAnalytics}>
-              <p>Open Analytics</p>
+              <p>Analytics</p>
             </Button>
           </div>
         </div>
