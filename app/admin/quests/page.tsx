@@ -73,7 +73,7 @@ export default function Page() {
   );
 
   const handleOpenAnalytics = () => {
-    window.open('/analytics', '_blank'); 
+    window.open("/analytics", "_blank");
   };
 
   return (
@@ -90,11 +90,11 @@ export default function Page() {
           </div>
           <div className={homePagestyles.questsButtonContainer}>
             <Button onClick={handleCreateQuest}>
-              <p>Create new quest</p>
+              <p>New quest</p>
             </Button>
             <Button onClick={handleOpenAnalytics}>
               <p>Open Analytics</p>
-              </Button>
+            </Button>
           </div>
         </div>
         <Loading isLoading={loading} loadingType="skeleton">
