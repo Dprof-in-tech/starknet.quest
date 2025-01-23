@@ -707,9 +707,14 @@ export default function Page({ params }: QuestIdProps) {
     } else if (currentPage === 1) {
       return (showBoost && boostInputValid) || nftUriValid || questRewardValid;
     }
-    if (currentPage === 2) {
-      return steps.some((step) => step.type === "None");
-    }
+  
+
+if (currentPage === 2) {
+
+  return steps.some((step) => step?.type === "None");
+
+}
+
     return false;
   }, [
     currentPage,
