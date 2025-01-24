@@ -721,9 +721,11 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
     } else if (currentPage === 1) {
       return (showBoost && boostInputValid) || nftUriValid || questRewardValid;
     }
+
     if (currentPage === 2) {
-      return steps.some((step) => step.type === "None");
+      return steps.some((step) => step?.type === "None");
     }
+
     return false;
   }, [
     currentPage,
