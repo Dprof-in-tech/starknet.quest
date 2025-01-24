@@ -6,9 +6,9 @@ import React, {
   useMemo,
   useRef,
   useState,
+  SetStateAction
 } from "react";
 import styles from "@styles/admin.module.css";
-import { useRouter } from "next/navigation";
 import { AdminService } from "@services/authService";
 import { QuestDefault } from "@constants/common";
 import { nft_uri, QuizQuestionDefaultInput, formSteps } from "@constants/admin";
@@ -27,6 +27,7 @@ import RewardDetailsForm from "@components/admin/formSteps/RewardDetailsForm";
 import TaskDetailsForm from "@components/admin/formSteps/TaskDetailsForm";
 import { TEXT_TYPE } from "@constants/typography";
 import FormContainer from "@components/admin/FormContainer";
+import { useRouter, useSearchParams } from 'next/navigation';
 
 type QuestIdProps = {
   params: {
@@ -52,7 +53,20 @@ type StepMap =
 
 export default function Page({ params }: QuestIdProps) {
   const router = useRouter();
-  const [currentPage, setCurrentPage] = useState(0);
+  const searchParams = useSearchParams();
+const [currentPage, setCurrentPage] = useState(() => {
+  const tabParam = searchParams.get('tab');
+  return tabParam ? parseInt(tabParam) : 0;
+});
+const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
+  // If it's a function, calculate the new page value
+  const newPage = typeof pageOrUpdater === 'function' 
+    ? pageOrUpdater(currentPage)
+    : pageOrUpdater;
+    
+  setCurrentPage(newPage);
+  router.push(`?tab=${newPage}`, { scroll: false });
+};
   const questId = useRef(parseInt(params.questId));
   const [questInput, setQuestInput] = useState<UpdateQuest>({
     id: Number(params.questId),
@@ -420,7 +434,7 @@ export default function Page({ params }: QuestIdProps) {
     // add tasks
     await handleAddTasks(addedTasks);
 
-    setCurrentPage((prev) => prev + 1);
+    handleTabChange(currentPage + 1)
   }, [steps, intialSteps]);
 
   const handleCreateBoost = useCallback(async () => {
@@ -465,7 +479,7 @@ export default function Page({ params }: QuestIdProps) {
       }
     }
     setButtonLoading(false);
-    setCurrentPage((prev) => prev + 1);
+    handleTabChange(currentPage + 1)
   };
 
   const handleAddTasks = useCallback(async (addedTasks: StepMap[]) => {
@@ -764,7 +778,7 @@ export default function Page({ params }: QuestIdProps) {
           questInput={questInput}
           handleQuestInputChange={handleQuestInputChange}
           submitButtonDisabled={isButtonDisabled}
-          onSubmit={() => setCurrentPage(currentPage + 1)}
+          onSubmit={() => handleTabChange(currentPage + 1)}
         />
       );
     } else if (currentPage === 1) {
@@ -840,7 +854,7 @@ export default function Page({ params }: QuestIdProps) {
         headingText="Edit Quest"
         steps={formSteps}
         currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
+        setCurrentPage={handleTabChange}
       >
         {questData.id !== 0 ? (
           renderFormStep()
