@@ -250,7 +250,7 @@ export default function Page() {
     await handleCreateBoost(id);
     await handleCreateNftUri(id);
     await setButtonLoading(false);
-    router.push(`/admin/quests/dashboard/${id}?tab=tasks`);
+    router.push(`/admin/quests/dashboard/${id}?tab=2`);
   }, [questInput, boostInput, nfturi]);
 
   const handleCreateTask = useCallback(async () => {
