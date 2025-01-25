@@ -26,6 +26,16 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({ label, endpoint, queryP
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       
+      const contentType = response.headers.get('content-type');
+      const expectedTypes = {
+        'csv': 'text/csv',
+        'json': 'application/json'
+      };
+
+      if (!contentType?.includes(expectedTypes[fileType])) {
+        throw new Error(`Invalid content-type: ${contentType}`);
+      }
+      
       const blob = await response.blob();
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
