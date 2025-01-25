@@ -31,8 +31,9 @@ const DownloadQuestUsersButton: React.FC<QuestUsersButtonProps> = ({ questId }) 
   return (
     <DownloadButton 
       label="Download Quest Users" 
-      endpoint="/api/quest-users" 
+      endpoint={`/api/quest-users`}
       queryParams={{ questId: Number(questId) }} 
+      fileType="json"
     />
   );
 };

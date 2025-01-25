@@ -30,10 +30,11 @@ const DownloadBoostWinnersButton: React.FC<DownloadBoostWinnersButtonProps> = ({
 
   return (
     <DownloadButton 
-      label="Download Boost Winners" 
-      endpoint="/api/boost-winners" 
-      queryParams={{ boostId: Number(boostId) }} 
-    />
+    label="Download Boost Winners" 
+    endpoint={`/api/boost-winners`} // Ensure the endpoint starts with /api/
+    queryParams={{ boostId: Number(boostId) }} 
+    fileType="json" // Specify the file type for download
+  />
   );
 };
 

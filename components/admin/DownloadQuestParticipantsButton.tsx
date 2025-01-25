@@ -45,11 +45,12 @@ const DownloadQuestParticipantsButton: React.FC<DownloadQuestParticipantsButtonP
   return (
     <div className="w-full flex justify-center">
       <div className="w-full sm:w-fit">
-      <DownloadButton 
-      label="Download Quest Participants" 
-      endpoint="/api/quest-participants" 
-      queryParams={{ questId: 123 }} 
-    />
+        <DownloadButton 
+          label="Download Quest Participants" 
+          endpoint={`/api/quest-participants`}
+          queryParams={{ questId: Number(questId) }}
+          fileType="json"
+        />
       </div>
     </div>
   );
