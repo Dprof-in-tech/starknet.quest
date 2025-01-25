@@ -1,4 +1,5 @@
 import React from "react";
+import { useNotification } from "@context/NotificationProvider";
 
 interface DownloadButtonProps {
   label: string;
@@ -9,6 +10,7 @@ interface DownloadButtonProps {
 
 const DownloadButton: React.FC<DownloadButtonProps> = ({ label, endpoint, queryParams, fileType = 'csv' }) => {
   const [isLoading, setIsLoading] = React.useState(false);
+  const { showNotification } = useNotification();
 
   const handleDownload = async () => {
     setIsLoading(true);
@@ -32,7 +34,7 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({ label, endpoint, queryP
       URL.revokeObjectURL(link.href);
     } catch (error) {
       console.error("Download failed:", error);
-      // Consider adding a notification system to inform the user
+      showNotification('Download failed', 'error');
     } finally {
       setIsLoading(false);
     }
