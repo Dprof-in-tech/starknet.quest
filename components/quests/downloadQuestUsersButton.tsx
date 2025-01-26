@@ -12,8 +12,7 @@ const DownloadQuestUsersButton: React.FC<QuestUsersButtonProps> = ({ questId }) 
 
   const handleDownload = async () => {
     try {
-      const data = await AdminService.getBoostWinnersByBoostId({ id: Number(questId) });
-
+        const data = await AdminService.getQuestUsersByQuestId({ id: Number(questId) });
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -28,13 +27,15 @@ const DownloadQuestUsersButton: React.FC<QuestUsersButtonProps> = ({ questId }) 
   };
 
   return (
-    <DownloadButton 
+    <div  onClick={handleDownload}>
+      <DownloadButton 
       label="Download Quest Users" 
-      endpoint={() => AdminService.getBoostWinnersByBoostId({ id: Number(questId) })}
+      endpoint={() => AdminService.getQuestUsersByQuestId({ id: Number(questId) })}
       queryParams={{ questId: Number(questId) }} 
       fileType="json"
-      onClick={handleDownload}
+     
     />
+    </div>
   );
 };
 

@@ -6,7 +6,7 @@ interface DownloadButtonProps {
   endpoint: () => Promise<string>;
   queryParams?: Record<string, string | number>;
   fileType?: 'csv' | 'json';
-  onClick?: () => Promise<void>;
+ 
 }
 
 const DownloadButton: React.FC<DownloadButtonProps> = ({ label, endpoint, queryParams, fileType = 'csv' }) => {

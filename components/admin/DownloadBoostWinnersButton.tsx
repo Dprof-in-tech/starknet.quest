@@ -28,13 +28,15 @@ const DownloadBoostWinnersButton: React.FC<DownloadBoostWinnersButtonProps> = ({
   };
 
   return (
-    <DownloadButton 
+   <div  onClick={handleDownload}>
+     <DownloadButton 
     label="Download Boost Winners" 
     endpoint={() => AdminService.getBoostWinnersByBoostId({ id: Number(boostId) })} // Use existing method
     queryParams={{ boostId: Number(boostId) }} 
     fileType="json" // Specify the file type for download
-    onClick={handleDownload}
+   
   />
+   </div>
   );
 };
 

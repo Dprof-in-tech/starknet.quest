@@ -43,13 +43,13 @@ const DownloadQuestParticipantsButton: React.FC<DownloadQuestParticipantsButtonP
 
   return (
     <div className="w-full flex justify-center">
-      <div className="w-full sm:w-fit">
+      <div   onClick={handleDownload} className="w-full sm:w-fit">
         <DownloadButton 
           label="Download Quest Participants" 
           endpoint={() => AdminService.getQuestParticipantsByQuestId({ id: Number(questId) })} 
           queryParams={{ questId: Number(questId) }}
           fileType="json"
-          onClick={handleDownload}
+        
         />
       </div>
     </div>
