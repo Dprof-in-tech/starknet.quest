@@ -242,32 +242,27 @@ const AdminQuestDetails: FunctionComponent<QuestDetailsProps> = ({
           quest.boosts.map((boost) => (
             <div className="w-fit" key={boost.id}>
             <DownloadButton 
-    label="Download Boost Winners" 
-    endpoint={() => AdminService.getBoostWinnersByBoostId({ id: Number(boost) })} // Use existing method
-    queryParams={{ boostId: Number(boost) }} 
-    fileType="json" // Specify the file type for download
-   
+     label="Download Boost Winners"
+        endpoint={() => AdminService.getBoostWinnersByBoostId({ id: Number(boost.id) })}
+       fileType="json"
   />   </div>
           ))}
         {isEdit && (
           <>
             <div className="w-fit">
             <DownloadButton 
-      label="Download Quest Users" 
-      endpoint={() => AdminService.getQuestUsersByQuestId({ id: Number(questId) })}
-      queryParams={{ questId: Number(questId) }} 
-      fileType="json"
+         label="Download Quest Users"
+             endpoint={() => AdminService.getQuestUsersByQuestId({ id: Number(questId) })}
+             fileType="json"
      
     />   </div>
             <div className="w-fit">
 
-            <DownloadButton 
-          label="Download Quest Participants" 
-          endpoint={() => AdminService.getQuestParticipantsByQuestId({ id: Number(questId) })} 
-          queryParams={{ questId: Number(questId) }}
-          fileType="json"
-        
-        />
+            <DownloadButton
+             label="Download Quest Participants"
+              endpoint={() => AdminService.getQuestParticipantsByQuestId({ id: Number(questId) })}
+            fileType="json"
+           />
 
             </div>
           </>
