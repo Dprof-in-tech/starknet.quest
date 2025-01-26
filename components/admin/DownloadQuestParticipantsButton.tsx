@@ -1,5 +1,4 @@
 import React from 'react';
-import Button from '@components/UI/button';
 import { useNotification } from '@context/NotificationProvider';
 import { AdminService } from '@services/authService';
 import DownloadButton from '../shared/DownloadButton';
@@ -47,9 +46,10 @@ const DownloadQuestParticipantsButton: React.FC<DownloadQuestParticipantsButtonP
       <div className="w-full sm:w-fit">
         <DownloadButton 
           label="Download Quest Participants" 
-          endpoint={`/api/quest-participants`}
+          endpoint={() => AdminService.getQuestParticipantsByQuestId({ id: Number(questId) })} 
           queryParams={{ questId: Number(questId) }}
           fileType="json"
+          onClick={handleDownload}
         />
       </div>
     </div>

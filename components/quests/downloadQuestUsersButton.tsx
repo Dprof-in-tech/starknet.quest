@@ -1,5 +1,4 @@
 import React from "react";
-import Button from "@components/UI/button";
 import { useNotification } from "@context/NotificationProvider";
 import { AdminService } from "@services/authService";
 import DownloadButton from '../shared/DownloadButton';
@@ -13,7 +12,7 @@ const DownloadQuestUsersButton: React.FC<QuestUsersButtonProps> = ({ questId }) 
 
   const handleDownload = async () => {
     try {
-      const data = await AdminService.getQuestUsersByQuestId({ id: Number(questId) });
+      const data = await AdminService.getBoostWinnersByBoostId({ id: Number(questId) });
 
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
@@ -31,9 +30,10 @@ const DownloadQuestUsersButton: React.FC<QuestUsersButtonProps> = ({ questId }) 
   return (
     <DownloadButton 
       label="Download Quest Users" 
-      endpoint={`/api/quest-users`}
+      endpoint={() => AdminService.getBoostWinnersByBoostId({ id: Number(questId) })}
       queryParams={{ questId: Number(questId) }} 
       fileType="json"
+      onClick={handleDownload}
     />
   );
 };

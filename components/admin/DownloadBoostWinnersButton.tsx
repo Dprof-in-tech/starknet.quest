@@ -1,5 +1,4 @@
 import React from "react";
-import Button from "@components/UI/button";
 import { useNotification } from "@context/NotificationProvider";
 import { AdminService } from '@services/authService';
 import DownloadButton from '../shared/DownloadButton';
@@ -31,9 +30,10 @@ const DownloadBoostWinnersButton: React.FC<DownloadBoostWinnersButtonProps> = ({
   return (
     <DownloadButton 
     label="Download Boost Winners" 
-    endpoint={`/api/boost-winners`} // Ensure the endpoint starts with /api/
+    endpoint={() => AdminService.getBoostWinnersByBoostId({ id: Number(boostId) })} // Use existing method
     queryParams={{ boostId: Number(boostId) }} 
     fileType="json" // Specify the file type for download
+    onClick={handleDownload}
   />
   );
 };

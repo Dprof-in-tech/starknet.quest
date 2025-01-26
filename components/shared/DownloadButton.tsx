@@ -3,9 +3,10 @@ import { useNotification } from "@context/NotificationProvider";
 import Button from "@components/UI/button";
 interface DownloadButtonProps {
   label: string;
-  endpoint: `/api/${string}`;
+  endpoint: () => Promise<string>;
   queryParams?: Record<string, string | number>;
   fileType?: 'csv' | 'json';
+  onClick?: () => Promise<void>;
 }
 
 const DownloadButton: React.FC<DownloadButtonProps> = ({ label, endpoint, queryParams, fileType = 'csv' }) => {
@@ -22,8 +23,8 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({ label, endpoint, queryP
         ? "?" +
           new URLSearchParams(queryParams as Record<string, string>).toString()
         : "";
-      const url = `${endpoint}${query}`;
-      const response = await fetch(url, {
+      const url = await endpoint();
+      const response = await fetch(url + query, {
         signal: abortControllerRef.current.signal
       });
       
