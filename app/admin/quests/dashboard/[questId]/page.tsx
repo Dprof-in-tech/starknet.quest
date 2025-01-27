@@ -483,100 +483,117 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
   };
 
   const handleAddTasks = useCallback(async (addedTasks: StepMap[]) => {
-    for (const step of addedTasks) {
+    const taskPromises = addedTasks.map(async (step) => {
       try {
-        if (step.type === "Quiz") {
-          await AdminService.createQuiz({
-            quest_id: questId.current,
-            name: step.data.quiz_name,
-            desc: step.data.quiz_desc,
-            intro: step.data.quiz_intro,
-            cta: step.data.quiz_cta,
-            help_link: step.data.quiz_help_link,
-          });
-          for (const question of step.data.questions) {
-            try {
-              await AdminService.createQuizQuestion({
+        switch (step.type) {
+          case "Quiz":
+            await AdminService.createQuiz({
+              quest_id: questId.current,
+              name: step.data.quiz_name,
+              desc: step.data.quiz_desc,
+              intro: step.data.quiz_intro,
+              cta: step.data.quiz_cta,
+              help_link: step.data.quiz_help_link,
+            });
+   
+            const quizQuestionPromises = step.data.questions.map(async (question: any) => 
+              AdminService.createQuizQuestion({
                 quiz_id: step.data.quiz_name,
                 question: question.question,
                 options: question.options,
                 correct_answers: question.correct_answers,
-              });
-            } catch (error) {
-              console.error("Error executing promise:", error);
-            }
-          }
-        }
-        if (step.type === "TwitterFw") {
-          await AdminService.createTwitterFw({
-            quest_id: questId.current,
-            name: step.data.twfw_name,
-            desc: step.data.twfw_desc,
-            username: step.data.twfw_username,
-          });
-        } else if (step.type === "TwitterRw") {
-          await AdminService.createTwitterRw({
-            quest_id: questId.current,
-            name: step.data.twrw_name,
-            desc: step.data.twrw_desc,
-            post_link: step.data.twrw_post_link,
-          });
-        } else if (step.type === "Discord") {
-          await AdminService.createDiscord({
-            quest_id: questId.current,
-            name: step.data.dc_name,
-            desc: step.data.dc_desc,
-            invite_link: step.data.dc_invite_link,
-            guild_id: step.data.dc_guild_id,
-          });
-        } else if (step.type === "Custom") {
-          await AdminService.createCustom({
-            quest_id: questId.current,
-            name: step.data.custom_name,
-            desc: step.data.custom_desc,
-            cta: step.data.custom_cta,
-            href: step.data.custom_href,
-            api: step.data.custom_api,
-          });
-        } else if (step.type === "Domain") {
-          await AdminService.createDomain({
-            quest_id: questId.current,
-            name: step.data.domain_name,
-            desc: step.data.domain_desc,
-          });
-        } else if (step.type === "Balance") {
-          await AdminService.createBalance({
-            quest_id: questId.current,
-            name: step.data.balance_name,
-            desc: step.data.balance_desc,
-            contracts: step.data.balance_contracts,
-            cta: step.data.balance_cta,
-            href: step.data.balance_href,
-          });
-        } else if (step.type === "Contract") {
-          await AdminService.createContract({
-            quest_id: questId.current,
-            name: step.data.contract_name,
-            desc: step.data.contract_desc,
-            href: step.data.contract_href,
-            cta: step.data.contract_cta,
-            calls: JSON.parse(step.data.contract_calls),
-          });
-        } else if (step.type === "CustomApi") {
-          await AdminService.createCustomApi({
-            quest_id: questId.current,
-            name: step.data.api_name,
-            desc: step.data.api_desc,
-            api_url: step.data.api_url,
-            regex: step.data.api_regex,
-            href: step.data.api_href,
-            cta: step.data.api_cta,
-          });
+              })
+            );
+            await Promise.all(quizQuestionPromises);
+            break;
+   
+          case "TwitterFw":
+            await AdminService.createTwitterFw({
+              quest_id: questId.current,
+              name: step.data.twfw_name,
+              desc: step.data.twfw_desc,
+              username: step.data.twfw_username,
+            });
+            break;
+   
+          case "TwitterRw":
+            await AdminService.createTwitterRw({
+              quest_id: questId.current,
+              name: step.data.twrw_name,
+              desc: step.data.twrw_desc,
+              post_link: step.data.twrw_post_link,
+            });
+            break;
+   
+          case "Discord":
+            await AdminService.createDiscord({
+              quest_id: questId.current,
+              name: step.data.dc_name,
+              desc: step.data.dc_desc,
+              invite_link: step.data.dc_invite_link,
+              guild_id: step.data.dc_guild_id,
+            });
+            break;
+   
+          case "Custom":
+            await AdminService.createCustom({
+              quest_id: questId.current,
+              name: step.data.custom_name,
+              desc: step.data.custom_desc,
+              cta: step.data.custom_cta,
+              href: step.data.custom_href,
+              api: step.data.custom_api,
+            });
+            break;
+   
+          case "Domain":
+            await AdminService.createDomain({
+              quest_id: questId.current,
+              name: step.data.domain_name,
+              desc: step.data.domain_desc,
+            });
+            break;
+   
+          case "Balance":
+            await AdminService.createBalance({
+              quest_id: questId.current,
+              name: step.data.balance_name,
+              desc: step.data.balance_desc,
+              contracts: step.data.balance_contracts,
+              cta: step.data.balance_cta,
+              href: step.data.balance_href,
+            });
+            break;
+   
+          case "Contract":
+            await AdminService.createContract({
+              quest_id: questId.current,
+              name: step.data.contract_name,
+              desc: step.data.contract_desc,
+              href: step.data.contract_href,
+              cta: step.data.contract_cta,
+              calls: JSON.parse(step.data.contract_calls),
+            });
+            break;
+   
+          case "CustomApi":
+            await AdminService.createCustomApi({
+              quest_id: questId.current,
+              name: step.data.api_name,
+              desc: step.data.api_desc,
+              api_url: step.data.api_url,
+              regex: step.data.api_regex,
+              href: step.data.api_href,
+              cta: step.data.api_cta,
+            });
+            break;
         }
       } catch (error) {
         showNotification(`Error adding ${step.type} task: ${error}`, "error");
       }
-    }
+    });
+   
+    await Promise.all(taskPromises);
   }, []);
 
   const handleDeleteTasks = useCallback(async (removedTasks: StepMap[]) => {
@@ -591,114 +608,125 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
 
   const handleUpdateTasks = useCallback(async (updatedSteps: StepMap[]) => {
     const taskPromises = updatedSteps.map(async (step) => {
-      if (step.type === "Quiz") {
-        await AdminService.updateQuiz({
-          id: step.data.id,
-          name: step.data.quiz_name,
-          desc: step.data.quiz_desc,
-          intro: step.data.quiz_intro,
-          cta: step.data.quiz_cta,
-          help_link: step.data.quiz_help_link,
-          quiz_id: step.data.quiz_id,
-        });
-
-        for (const question of step.data.questions) {
-          try {
-            if (question.id === 0) {
-              await AdminService.createQuizQuestion({
-                quiz_id: step.data.quiz_id,
+      try {
+        switch (step.type) {
+          case "Quiz":
+            await AdminService.updateQuiz({
+              id: step.data.id,
+              name: step.data.quiz_name,
+              desc: step.data.quiz_desc,
+              intro: step.data.quiz_intro,
+              cta: step.data.quiz_cta,
+              help_link: step.data.quiz_help_link,
+              quiz_id: step.data.quiz_id,
+            });
+  
+            const quizQuestionPromises = step.data.questions.map(async (question: any) => {
+              if (question.id === 0) {
+                await AdminService.createQuizQuestion({
+                  quiz_id: step.data.quiz_id,
+                  question: question.question,
+                  options: question.options,
+                  correct_answers: question.correct_answers,
+                });
+              }
+              return AdminService.updateQuizQuestion({
+                id: question.id,
                 question: question.question,
                 options: question.options,
                 correct_answers: question.correct_answers,
+                quiz_id: step.data.quiz_id,
               });
-            }
-            await AdminService.updateQuizQuestion({
-              id: question.id,
-              question: question.question,
-              options: question.options,
-              correct_answers: question.correct_answers,
-              quiz_id: step.data.quiz_id,
             });
-          } catch (error) {
-            console.error("Error executing promise:", error);
-          }
+            await Promise.all(quizQuestionPromises);
+            break;
+  
+          case "TwitterFw":
+            await AdminService.updateTwitterFw({
+              id: step.data.id,
+              name: step.data.twfw_name,
+              desc: step.data.twfw_desc,
+              username: step.data.twfw_username,
+            });
+            break;
+  
+          case "TwitterRw":
+            await AdminService.updateTwitterRw({
+              id: step.data.id,
+              name: step.data.twrw_name,
+              desc: step.data.twrw_desc,
+              post_link: step.data.twrw_post_link,
+            });
+            break;
+  
+          case "Discord":
+            await AdminService.updateDiscord({
+              id: step.data.id,
+              name: step.data.dc_name,
+              desc: step.data.dc_desc,
+              invite_link: step.data.dc_invite_link,
+              guild_id: step.data.dc_guild_id,
+            });
+            break;
+  
+          case "Custom":
+            await AdminService.updateCustom({
+              id: step.data.id,
+              name: step.data.custom_name,
+              desc: step.data.custom_desc,
+              cta: step.data.custom_cta,
+              href: step.data.custom_href,
+              api: step.data.custom_api,
+            });
+            break;
+  
+          case "Domain":
+            await AdminService.updateDomain({
+              id: step.data.id,
+              name: step.data.custom_name,
+              desc: step.data.custom_desc,
+            });
+            break;
+  
+          case "Balance":
+            await AdminService.updateBalance({
+              id: step.data.id,
+              name: step.data.balance_name,
+              desc: step.data.balance_desc,
+              contracts: step.data.balance_contracts,
+              cta: step.data.balance_cta,
+              href: step.data.balance_href,
+            });
+            break;
+  
+          case "Contract":
+            await AdminService.updateContract({
+              id: step.data.id,
+              name: step.data.contract_name,
+              desc: step.data.contract_desc,
+              href: step.data.contract_href,
+              cta: step.data.contract_cta,
+              calls: JSON.parse(step.data.contract_calls),
+            });
+            break;
+  
+          case "CustomApi":
+            await AdminService.updateCustomApi({
+              id: step.data.id,
+              name: step.data.api_name,
+              desc: step.data.api_desc,
+              api_url: step.data.api_url,
+              cta: step.data.api_cta,
+              href: step.data.api_href,
+              regex: step.data.api_regex,
+            });
+            break;
         }
-      }
-      if (step.type === "TwitterFw") {
-        await AdminService.updateTwitterFw({
-          id: step.data.id,
-          name: step.data.twfw_name,
-          desc: step.data.twfw_desc,
-          username: step.data.twfw_username,
-        });
-      } else if (step.type === "TwitterRw") {
-        await AdminService.updateTwitterRw({
-          id: step.data.id,
-          name: step.data.twrw_name,
-          desc: step.data.twrw_desc,
-          post_link: step.data.twrw_post_link,
-        });
-      } else if (step.type === "Discord") {
-        await AdminService.updateDiscord({
-          id: step.data.id,
-          name: step.data.dc_name,
-          desc: step.data.dc_desc,
-          invite_link: step.data.dc_invite_link,
-          guild_id: step.data.dc_guild_id,
-        });
-      } else if (step.type === "Custom") {
-        await AdminService.updateCustom({
-          id: step.data.id,
-          name: step.data.custom_name,
-          desc: step.data.custom_desc,
-          cta: step.data.custom_cta,
-          href: step.data.custom_href,
-          api: step.data.custom_api,
-        });
-      } else if (step.type === "Domain") {
-        await AdminService.updateDomain({
-          id: step.data.id,
-          name: step.data.custom_name,
-          desc: step.data.custom_desc,
-        });
-      } else if (step.type === "Balance") {
-        await AdminService.updateBalance({
-          id: step.data.id,
-          name: step.data.balance_name,
-          desc: step.data.balance_desc,
-          contracts: step.data.balance_contracts,
-          cta: step.data.balance_cta,
-          href: step.data.balance_href,
-        });
-      } else if (step.type === "Contract") {
-        try {
-          await AdminService.updateContract({
-            id: step.data.id,
-            name: step.data.contract_name,
-            desc: step.data.contract_desc,
-            href: step.data.contract_href,
-            cta: step.data.contract_cta,
-            calls: JSON.parse(step.data.contract_calls),
-          });
-        } catch (error) {
-          showNotification(
-            `Error updating ${step.type} task: ${error}`,
-            "error"
-          );
-        }
-      } else if (step.type === "CustomApi") {
-        await AdminService.updateCustomApi({
-          id: step.data.id,
-          name: step.data.api_name,
-          desc: step.data.api_desc,
-          api_url: step.data.api_url,
-          cta: step.data.api_cta,
-          href: step.data.api_href,
-          regex: step.data.api_regex,
-        });
+      } catch (error) {
+        showNotification(`Error updating ${step.type} task: ${error}`, "error");
       }
     });
-
+  
     await Promise.all(taskPromises);
   }, []);
 
