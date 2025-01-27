@@ -25,6 +25,7 @@ import Typography from "@components/UI/typography/typography";
 import QuestDetailsForm from "@components/admin/formSteps/QuestDetailsForm";
 import RewardDetailsForm from "@components/admin/formSteps/RewardDetailsForm";
 import TaskDetailsForm from "@components/admin/formSteps/TaskDetailsForm";
+import BannerDetailsForm from "@components/admin/formSteps/BannerDetailsForm";
 import { TEXT_TYPE } from "@constants/typography";
 import FormContainer from "@components/admin/FormContainer";
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -356,10 +357,25 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
   const handleQuestInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
-      setQuestInput((prev) => ({ ...prev, [name]: value }));
+  
+      setQuestInput((prev) => ({
+        ...prev,
+        banner: {
+          ...(prev.banner ?? {
+            tag: "",
+            title: "",
+            description: "",
+            cta: "",
+            href: "",
+            image: "",
+          }), 
+          [name]: value, 
+        },
+      }));
     },
     []
   );
+
 
   const handleBoostInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -368,6 +384,7 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
     },
     []
   );
+
 
   const handleTasksInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
@@ -382,6 +399,7 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
     },
     []
   );
+
 
   useEffect(() => {
     //check if start time is less than current time
@@ -743,21 +761,24 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
       !questInput.category;
 
     const questRewardValid = !questInput.rewards_title || !questInput.logo;
+    
+    const bannerValid = !questInput.banner?.tag || !questInput.banner?.title || !questInput.banner?.description || !questInput.banner?.cta || !questInput.banner?.href || !questInput.banner?.image;
 
     if (currentPage === 0) {
       return questInputValid;
     } else if (currentPage === 1) {
       return (showBoost && boostInputValid) || nftUriValid || questRewardValid;
-    }
-
-    if (currentPage === 2) {
-      return steps.some((step) => step?.type === "None");
+    } else if (currentPage === 2) {
+      return steps.some((step) => step.type === "None");
+    } else if (currentPage === 3) {
+      return bannerValid;
     }
 
     return false;
   }, [
     currentPage,
     questInput,
+    questInput.banner,
     nfturi,
     steps,
     showBoost,
@@ -851,7 +872,22 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
           }}
         />
       );
-    } else if (currentPage === 3) {
+     } else if (currentPage === 3) {
+      return (
+      <BannerDetailsForm
+        setQuestInput={setQuestInput}
+        questInput={questInput}
+        handleQuestInputChange={handleQuestInputChange}
+        submitButtonDisabled={isButtonDisabled}
+        onSubmit={async () => {
+          await handleUpdateQuest(); 
+          showNotification("Banner updated successfully", "success");
+          setCurrentPage((prev) => prev + 1); 
+        }}
+/>
+      );
+    }
+    else if (currentPage === 4) {
       if (questData.id === 0) {
         return (
           <div>

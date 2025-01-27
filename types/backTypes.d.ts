@@ -306,6 +306,14 @@ export type UpdateQuest = {
   img_card?: string;
   title_card?: string;
   issuer?: string;
+  banner?: {
+    tag: string;
+    title: string;
+    description: string;
+    cta: string;
+    href: string;
+    image: string;
+  };
 };
 
 export type CreateBoost = {
