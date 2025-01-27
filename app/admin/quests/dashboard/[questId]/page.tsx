@@ -357,10 +357,25 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
   const handleQuestInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
-      setQuestInput((prev) => ({ ...prev, [name]: value }));
+  
+      setQuestInput((prev) => ({
+        ...prev,
+        banner: {
+          ...(prev.banner ?? {
+            tag: "",
+            title: "",
+            description: "",
+            cta: "",
+            href: "",
+            image: "",
+          }), 
+          [name]: value, 
+        },
+      }));
     },
     []
   );
+
 
   const handleBoostInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
