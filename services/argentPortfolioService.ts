@@ -14,6 +14,8 @@ const API_HEADERS = {
   "argent-client": "portfolio",
   "argent-network": "mainnet",
   "argent-version": "1.4.3",
+  "content-type": "application/json",
+  "referer": "https://portfolio.argent.xyz/",
 };
 
 const DEFAULT_MAX_RETRIES = 3;
@@ -87,21 +89,28 @@ const fetchDataWithRetry = async <T>(
 
 export const fetchDapps = async ({ signal }: { signal?: AbortSignal }) => {
   const data = await fetchDataWithRetry<ArgentDapp[]>(`${API_BASE}/${API_VERSION}/tokens/dapps?chain=starknet`, { signal });
+  console.log(data, "Dapps");
   return Object.fromEntries(data.map((dapp) => [dapp.dappId, dapp])) as ArgentDappMap;
 };
 
 export const fetchTokens = async ({ signal }: { signal?: AbortSignal }) => {
   const data = await fetchDataWithRetry<{ tokens: ArgentToken[] }>(`${API_BASE}/${API_VERSION}/tokens/info?chain=starknet`, { signal });
+  console.log(data, "Token");
   return Object.fromEntries(data.tokens.map((token) => [token.address, token])) as ArgentTokenMap;
 };
 
 export const fetchUserTokens = async (walletAddress: string, { signal }: { signal?: AbortSignal }) => {
   const data = await fetchDataWithRetry<{ balances: ArgentUserToken[], status: string }>(`${API_BASE}/${API_VERSION}/activity/starknet/mainnet/account/${walletAddress}/balance`, { signal });
+  console.log(data, "User tokens");
   return data.balances;
 };
 
 export const fetchUserDapps = async (walletAddress: string, { signal }: { signal?: AbortSignal }) => {
-  const data = await fetchDataWithRetry<{ dapps: ArgentUserDapp[] }>(`${API_BASE}/${API_VERSION}/tokens/defi/decomposition/${walletAddress}?chain=starknet`, { signal });
+  const data = await fetchDataWithRetry<{ dapps: ArgentUserDapp[] }>(
+    `${API_BASE}/${API_VERSION}/tokens/defi/${walletAddress}/investments?chain=starknet&application=webwallet`,
+    { signal }
+  );
+  console.log(data, "User dapps");
   return data.dapps;
 };
 
