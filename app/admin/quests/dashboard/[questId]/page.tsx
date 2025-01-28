@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useRef,
   useState,
-  SetStateAction
+  SetStateAction,
 } from "react";
 import styles from "@styles/admin.module.css";
 import { AdminService } from "@services/authService";
@@ -28,7 +28,7 @@ import TaskDetailsForm from "@components/admin/formSteps/TaskDetailsForm";
 import BannerDetailsForm from "@components/admin/formSteps/BannerDetailsForm";
 import { TEXT_TYPE } from "@constants/typography";
 import FormContainer from "@components/admin/FormContainer";
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from "next/navigation";
 
 type QuestIdProps = {
   params: {
@@ -55,19 +55,20 @@ type StepMap =
 export default function Page({ params }: QuestIdProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-const [currentPage, setCurrentPage] = useState(() => {
-  const tabParam = searchParams.get('tab');
-  return tabParam ? parseInt(tabParam) : 0;
-});
-const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
-  // If it's a function, calculate the new page value
-  const newPage = typeof pageOrUpdater === 'function' 
-    ? pageOrUpdater(currentPage)
-    : pageOrUpdater;
-    
-  setCurrentPage(newPage);
-  router.push(`?tab=${newPage}`, { scroll: false });
-};
+  const [currentPage, setCurrentPage] = useState(() => {
+    const tabParam = searchParams.get("tab");
+    return tabParam ? parseInt(tabParam) : 0;
+  });
+  const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
+    // If it's a function, calculate the new page value
+    const newPage =
+      typeof pageOrUpdater === "function"
+        ? pageOrUpdater(currentPage)
+        : pageOrUpdater;
+
+    setCurrentPage(newPage);
+    router.push(`?tab=${newPage}`, { scroll: false });
+  };
   const questId = useRef(parseInt(params.questId));
   const [questInput, setQuestInput] = useState<UpdateQuest>({
     id: Number(params.questId),
@@ -354,12 +355,15 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
     return { updatedTasks, removedTasks, addedTasks };
   }, [steps, intialSteps]);
 
+  console.log(questInput);
+
   const handleQuestInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
-  
+
       setQuestInput((prev) => ({
         ...prev,
+        [name]: value,
         banner: {
           ...(prev.banner ?? {
             tag: "",
@@ -368,14 +372,12 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
             cta: "",
             href: "",
             image: "",
-          }), 
-          [name]: value, 
+          }),
         },
       }));
     },
     []
   );
-
 
   const handleBoostInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -384,7 +386,6 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
     },
     []
   );
-
 
   const handleTasksInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
@@ -399,7 +400,6 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
     },
     []
   );
-
 
   useEffect(() => {
     //check if start time is less than current time
@@ -452,7 +452,7 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
     // add tasks
     await handleAddTasks(addedTasks);
 
-    handleTabChange(currentPage + 1)
+    handleTabChange(currentPage + 1);
   }, [steps, intialSteps]);
 
   const handleCreateBoost = useCallback(async () => {
@@ -497,7 +497,7 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
       }
     }
     setButtonLoading(false);
-    handleTabChange(currentPage + 1)
+    handleTabChange(currentPage + 1);
   };
 
   const handleAddTasks = useCallback(async (addedTasks: StepMap[]) => {
@@ -513,18 +513,19 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
               cta: step.data.quiz_cta,
               help_link: step.data.quiz_help_link,
             });
-   
-            const quizQuestionPromises = step.data.questions.map(async (question: any) => 
-              AdminService.createQuizQuestion({
-                quiz_id: step.data.quiz_name,
-                question: question.question,
-                options: question.options,
-                correct_answers: question.correct_answers,
-              })
+
+            const quizQuestionPromises = step.data.questions.map(
+              async (question: any) =>
+                AdminService.createQuizQuestion({
+                  quiz_id: step.data.quiz_name,
+                  question: question.question,
+                  options: question.options,
+                  correct_answers: question.correct_answers,
+                })
             );
             await Promise.all(quizQuestionPromises);
             break;
-   
+
           case "TwitterFw":
             await AdminService.createTwitterFw({
               quest_id: questId.current,
@@ -533,7 +534,7 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
               username: step.data.twfw_username,
             });
             break;
-   
+
           case "TwitterRw":
             await AdminService.createTwitterRw({
               quest_id: questId.current,
@@ -542,7 +543,7 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
               post_link: step.data.twrw_post_link,
             });
             break;
-   
+
           case "Discord":
             await AdminService.createDiscord({
               quest_id: questId.current,
@@ -552,7 +553,7 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
               guild_id: step.data.dc_guild_id,
             });
             break;
-   
+
           case "Custom":
             await AdminService.createCustom({
               quest_id: questId.current,
@@ -563,7 +564,7 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
               api: step.data.custom_api,
             });
             break;
-   
+
           case "Domain":
             await AdminService.createDomain({
               quest_id: questId.current,
@@ -571,7 +572,7 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
               desc: step.data.domain_desc,
             });
             break;
-   
+
           case "Balance":
             await AdminService.createBalance({
               quest_id: questId.current,
@@ -582,7 +583,7 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
               href: step.data.balance_href,
             });
             break;
-   
+
           case "Contract":
             await AdminService.createContract({
               quest_id: questId.current,
@@ -593,7 +594,7 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
               calls: JSON.parse(step.data.contract_calls),
             });
             break;
-   
+
           case "CustomApi":
             await AdminService.createCustomApi({
               quest_id: questId.current,
@@ -610,7 +611,7 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
         showNotification(`Error adding ${step.type} task: ${error}`, "error");
       }
     });
-   
+
     await Promise.all(taskPromises);
   }, []);
 
@@ -638,27 +639,29 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
               help_link: step.data.quiz_help_link,
               quiz_id: step.data.quiz_id,
             });
-  
-            const quizQuestionPromises = step.data.questions.map(async (question: any) => {
-              if (question.id === 0) {
-                await AdminService.createQuizQuestion({
-                  quiz_id: step.data.quiz_id,
+
+            const quizQuestionPromises = step.data.questions.map(
+              async (question: any) => {
+                if (question.id === 0) {
+                  await AdminService.createQuizQuestion({
+                    quiz_id: step.data.quiz_id,
+                    question: question.question,
+                    options: question.options,
+                    correct_answers: question.correct_answers,
+                  });
+                }
+                return AdminService.updateQuizQuestion({
+                  id: question.id,
                   question: question.question,
                   options: question.options,
                   correct_answers: question.correct_answers,
+                  quiz_id: step.data.quiz_id,
                 });
               }
-              return AdminService.updateQuizQuestion({
-                id: question.id,
-                question: question.question,
-                options: question.options,
-                correct_answers: question.correct_answers,
-                quiz_id: step.data.quiz_id,
-              });
-            });
+            );
             await Promise.all(quizQuestionPromises);
             break;
-  
+
           case "TwitterFw":
             await AdminService.updateTwitterFw({
               id: step.data.id,
@@ -667,7 +670,7 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
               username: step.data.twfw_username,
             });
             break;
-  
+
           case "TwitterRw":
             await AdminService.updateTwitterRw({
               id: step.data.id,
@@ -676,7 +679,7 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
               post_link: step.data.twrw_post_link,
             });
             break;
-  
+
           case "Discord":
             await AdminService.updateDiscord({
               id: step.data.id,
@@ -686,7 +689,7 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
               guild_id: step.data.dc_guild_id,
             });
             break;
-  
+
           case "Custom":
             await AdminService.updateCustom({
               id: step.data.id,
@@ -697,7 +700,7 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
               api: step.data.custom_api,
             });
             break;
-  
+
           case "Domain":
             await AdminService.updateDomain({
               id: step.data.id,
@@ -705,7 +708,7 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
               desc: step.data.custom_desc,
             });
             break;
-  
+
           case "Balance":
             await AdminService.updateBalance({
               id: step.data.id,
@@ -716,7 +719,7 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
               href: step.data.balance_href,
             });
             break;
-  
+
           case "Contract":
             await AdminService.updateContract({
               id: step.data.id,
@@ -727,7 +730,7 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
               calls: JSON.parse(step.data.contract_calls),
             });
             break;
-  
+
           case "CustomApi":
             await AdminService.updateCustomApi({
               id: step.data.id,
@@ -744,7 +747,7 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
         showNotification(`Error updating ${step.type} task: ${error}`, "error");
       }
     });
-  
+
     await Promise.all(taskPromises);
   }, []);
 
@@ -761,8 +764,14 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
       !questInput.category;
 
     const questRewardValid = !questInput.rewards_title || !questInput.logo;
-    
-    const bannerValid = !questInput.banner?.tag || !questInput.banner?.title || !questInput.banner?.description || !questInput.banner?.cta || !questInput.banner?.href || !questInput.banner?.image;
+
+    const bannerValid =
+      !questInput.banner?.tag ||
+      !questInput.banner?.title ||
+      !questInput.banner?.description ||
+      !questInput.banner?.cta ||
+      !questInput.banner?.href ||
+      !questInput.banner?.image;
 
     if (currentPage === 0) {
       return questInputValid;
@@ -872,22 +881,21 @@ const handleTabChange = (pageOrUpdater: SetStateAction<number>) => {
           }}
         />
       );
-     } else if (currentPage === 3) {
+    } else if (currentPage === 3) {
       return (
-      <BannerDetailsForm
-        setQuestInput={setQuestInput}
-        questInput={questInput}
-        handleQuestInputChange={handleQuestInputChange}
-        submitButtonDisabled={isButtonDisabled}
-        onSubmit={async () => {
-          await handleUpdateQuest(); 
-          showNotification("Banner updated successfully", "success");
-          setCurrentPage((prev) => prev + 1); 
-        }}
-/>
+        <BannerDetailsForm
+          setQuestInput={setQuestInput}
+          questInput={questInput}
+          handleQuestInputChange={handleQuestInputChange}
+          submitButtonDisabled={isButtonDisabled}
+          onSubmit={async () => {
+            await handleUpdateQuest();
+            showNotification("Banner updated successfully", "success");
+            setCurrentPage((prev) => prev + 1);
+          }}
+        />
       );
-    }
-    else if (currentPage === 4) {
+    } else if (currentPage === 4) {
       if (questData.id === 0) {
         return (
           <div>

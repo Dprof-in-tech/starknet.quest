@@ -290,7 +290,7 @@ export type CreateQuest = {
   img_card: string;
   title_card: string;
   issuer: string;
-  mandatory_domain?: boolean | null; 
+  mandatory_domain?: string | null;
 };
 
 export type UpdateQuest = {
@@ -315,7 +315,7 @@ export type UpdateQuest = {
     href: string;
     image: string;
   };
-  mandatory_domain?: boolean | null; 
+  mandatory_domain?: boolean | null;
 };
 
 export type CreateBoost = {
