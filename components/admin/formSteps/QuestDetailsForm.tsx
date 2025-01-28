@@ -176,6 +176,28 @@ const QuestDetailsForm: FunctionComponent<QuestDetailsFormProps> = ({
         </Typography>
       </div>
 
+      <div className="flex flex-col gap-1">
+  <div className="flex items-center gap-2">
+    <input
+      type="checkbox"
+      name="mandatory_domain"
+      checked={questInput.mandatory_domain === null} 
+      onChange={(e) => {
+        setQuestInput((prev: any) => ({
+          ...prev,
+          mandatory_domain: e.target.checked ? null : "none",
+        }));
+      }}
+      id="mandatory-domain-checkbox"
+      className={styles.customCheckbox}
+    />
+    <label htmlFor="mandatory-domain-checkbox">Mandatory Domain</label>
+  </div>
+  <Typography type={TEXT_TYPE.BODY_MICRO} color="textGray">
+    Check this box if a domain is mandatory for this quest.
+  </Typography>
+</div>
+
       <div className="w-full sm:w-fit">
         <Button onClick={onSubmit} disabled={submitButtonDisabled}>
           <p>Save Changes</p>
