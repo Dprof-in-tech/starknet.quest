@@ -34,7 +34,7 @@ export default function Page() {
 
       const sortedAllQuests = allQuests.sort((a, b) => b.id - a.id);
 
-      setQuests(allQuests);
+      setQuests(sortedAllQuests);
       setLoading(false);
 
     } catch (error) {
