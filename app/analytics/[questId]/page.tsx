@@ -30,7 +30,6 @@ import {
 import { numberWithCommas } from "@utils/numberService";
 import { CDNImg } from "@components/cdn/image";
 import { useMediaQuery } from "@mui/material";
-// import AnalyticsSkeleton from "@components/skeletons/analyticsSkeleton";
 import { QuestDefault } from "@constants/common";
 import Typography from "@components/UI/typography/typography";
 import { TEXT_TYPE } from "@constants/typography";
@@ -201,15 +200,6 @@ export default function Page({ params }: BoostQuestPageProps) {
       <div className={styles.backButton}>
         <BackButton onClick={() => router.back()} />
       </div>
-      {/* 
-      {loading ? (
-        <div className="flex items-center justify-center w-full ">
-          <div className="w-full flex flex-col max-w-[950px]">
-            <AnalyticsSkeleton />
-          </div>
-        </div>
-      ) : (
-        <> */}
       <div className="flex flex-col items-center justify-center mb-16">
         {isQuestLoading ? (
           <QuestHeaderSkeleton />
@@ -488,8 +478,6 @@ export default function Page({ params }: BoostQuestPageProps) {
           </div>
         )}
       </div>
-      {/* </>
-      )} */}
     </div>
   );
 }
